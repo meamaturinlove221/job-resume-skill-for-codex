@@ -131,68 +131,9 @@ $job-resume-codex
 ```text
 $job-resume-codex
 
-这个岗位要投递。请按 CV/三维视觉路线，为 VGGT + SMPL-X、VGGT + ZJU-MoCap、VideoPose3D 准备面试拷打问题和安全回答边界。
+这个岗位要投递。请按 CV/三维视觉路线，准备面试拷打问题
 ```
 
-## Route system
-
-### CV / 3D vision / graphics route
-
-Use for JDs mentioning computer vision, 3D vision, point cloud, depth estimation, camera geometry, human reconstruction, SMPL/SMPL-X, rendering, OpenCV, OpenGL, or graphics.
-
-Project priority:
-
-1. VGGT + SMPL-X / 4K4D human-prior full-scene point cloud work
-2. VGGT + ZJU-MoCap data adapter
-3. VideoPose3D
-4. C++ graphics/game engineering
-5. TuringResearch as research-engineering support
-
-### AI Agent / RAG / LLMOps / tooling route
-
-Use for JDs mentioning AI Agent, tool use, RAG, knowledge base, evaluation, LLMOps, MCP, workflow automation, AI coding, or research engineering.
-
-Project priority:
-
-1. TuringResearch / automated research workflow
-2. evidence management, manifests, failure gates, source tracking
-3. Codex / Claude Code / OpenCode workflow experience
-4. VGGT as a complex research-engineering case
-5. Python automation
-
-### General engineering route
-
-Use for broad C++ / Python engineering roles.
-
-Project priority:
-
-1. C / C++ / Python foundation
-2. C++ graphics/game project
-3. Python automation and data processing
-4. Git / Linux / collaboration
-5. Research projects as engineering complexity evidence
-
-## Claim safety
-
-This repository is intentionally conservative. It should improve wording, not invent facts.
-
-Never fabricate:
-
-- internships
-- publications
-- awards
-- open-source stars or users
-- production metrics
-- completed model results
-- ownership of work done by others
-
-For VGGT-related projects, always distinguish:
-
-- teacher vs student
-- metric pass vs visual pass vs advisor pass
-- diagnostic evidence vs final evidence
-
-Do not present isolated human scatter, projection overlay, SMPL-only results, Kinect/teacher-only results, or prototype baselines as final advisor-level full-scene point cloud evidence.
 
 ## Optional HTML resume rendering
 
