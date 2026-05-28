@@ -1,232 +1,219 @@
-# 🎯 Job Resume Skill — Claude Code 自动化求职工作流
+# Job Resume Skill for Codex
 
-> 💼 基于 Claude Code 的求职助手：Boss直聘搜岗 → Excel 管理 → 智能生成自我介绍 + 定制简历 PDF
->
-> 从刷 JD 到投递，把重复劳动交给 AI。
+A Codex-native job-search and resume-tailoring skill converted from a Claude Code workflow.
 
----
+It helps with:
 
-## 🤔 为什么需要这个工作流？
+- JD analysis and job-route classification
+- targeted resume bullets
+- Boss/牛客/实习僧 outreach messages
+- interview drill questions
+- risky-claim audits
+- job-table screening
 
-求职最耗时的从来不是面试——是 **重复刷岗、手动筛 JD、逐个改简历**。
+This fork is designed for Codex. The old Claude Code slash-command files are kept as references only.
 
-```
-传统求职流程 ❌                          本工作流 ✅
-───────────────                          ───────────────
-刷Boss直聘 2 小时 ──► 筛出 20 个岗       自动抓取 + Excel 整理
-每个岗手动复制 JD ──► 改一版简历 30 分钟  AI 根据 JD 定制简历
-投了 30 家海投 ──► HR 一眼看出           每个岗位独立定制，ATS 优化
-打招呼想半天 ──► 要么套话要么空白         自动生成匹配的 100 字自我介绍
-```
+## Why this fork exists
 
----
+The upstream workflow used Claude Code slash commands such as `/resume` and `/job-hunt`, and installed files under `legacy Claude commands path`. Codex skills use a different structure: a skill directory with a `SKILL.md` file. This repository now provides that Codex-native structure.
 
-## ✨ Skill 亮点
+## Architecture
 
-| 能力 | 说明 |
-|------|------|
-| 🔍 **模板化搜岗** | 预设城市/岗位/薪资/规模/行业组合，支持多模板批量搜索 |
-| 📊 **Excel 可视管理** | 岗位信息自动写入 Excel，一目了然，勾选即筛选 |
-| 💬 **智能自我介绍** | 根据 JD 自动生成 100-150 字 Boss 打招呼话术，口语化不生硬 |
-| 📄 **定制简历 PDF** | 基于 JD 关键词重写工作经历，ATS 优化，Chrome 直接出 PDF |
-| 🎯 **真实可信赖** | 只改表述顺序和措辞，**不编造经历**，保留所有量化数据 |
-| 🔄 **去重** | 自动去重、跨天排重 |
-
----
-
-## 📦 包含的技能
-
-| 技能 | 说明 |
-|------|------|
-| `/resume` | 传入 JD 文本或链接，直接生成针对性简历 + 匹配度评估 + 面试建议 |
-| `/job-hunt search` | 自动搜索 Boss直聘岗位，去重后写入 Excel |
-| `/job-hunt apply` | 读取 Excel 勾选，批量生成自我介绍 + 定制简历 PDF |
-
----
-
-## 🚀 快速开始
-
-### 1. 安装技能文件
-
-将 `skills/` 下的文件复制到 Claude Code commands 目录：
-
-```bash
-# 方法1：复制到全局 commands
-mkdir -p ~/.claude/commands/求职工具
-cp skills/resume.md skills/job-hunt.md ~/.claude/commands/求职工具/
-
-# 方法2：复制到项目级 commands
-cp -r skills/ .claude/commands/求职工具/
+```text
+Input
+  ├─ JD text
+  ├─ job link content
+  └─ CSV/XLSX job table
+        │
+        ▼
+Codex skill: job-resume-codex
+        │
+        ├─ JD parser
+        ├─ route classifier
+        │     ├─ CV / 3D vision / graphics        → VGGT-primary
+        │     ├─ AI Agent / RAG / LLMOps / tools   → TuringResearch-primary
+        │     ├─ multimodal / AI engineering       → balanced
+        │     └─ general C++ / Python engineering  → general-safe
+        ├─ claim safety gate
+        └─ output generator
+              ├─ resume bullets
+              ├─ outreach message
+              ├─ interview drill
+              └─ risk list
 ```
 
-### 2. 配置模板文件
+## Repository layout
 
-```bash
-mkdir -p ~/Desktop/job-search/resumes
-cp templates/resume_template.html ~/Desktop/job-search/
-cp templates/job_templates.json ~/Desktop/job-search/
+```text
+job-resume-skill-for-codex/
+├── README.md
+├── AGENTS.md
+├── .agents/
+│   └── skills/
+│       └── job-resume-codex/
+│           ├── SKILL.md
+│           ├── assets/
+│           │   ├── user_profile.md
+│           │   ├── job_templates.json
+│           │   └── resume_template.html
+│           ├── references/
+│           │   ├── resume_workflow.md
+│           │   ├── job_hunt_workflow.md
+│           │   └── claim_safety.md
+│           └── scripts/
+│               └── render_resume.py
+├── skills/       # legacy Claude Code references
+├── templates/    # legacy templates
+└── examples/     # legacy profile templates
 ```
 
-### 3. 填写个人信息
+## Install for Codex
 
-编辑 skill 文件中的占位符：
+### Option A: repo-local skill
 
-| 占位符 | 替换为 |
-|--------|--------|
-| `{{YOUR_NAME}}` | 你的姓名 |
-| `{{YOUR_EMAIL}}` | 邮箱 |
-| `{{YOUR_PHONE}}` | 电话 |
-| 工作经历、教育背景、技能等 | 你的真实经历 |
+Use this when you open this repository in Codex. Codex can discover the skill from:
 
-### 4. 创建用户档案
-
-基于 `examples/profile_template.md` 创建你的完整技能档案：
-
-```bash
-cp examples/profile_template.md ~/.claude/projects/-YOUR_PATH/memory/user_profile.md
-# 编辑填写你的信息
+```text
+.agents/skills/job-resume-codex/SKILL.md
 ```
 
-### 5. 前置依赖
+Then call it in Codex with:
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
-- [browser-act](https://github.com/nicepkg/browser-act) — Boss直聘页面自动化（`/job-hunt search` 需要）
-- Google Chrome — 简历 HTML → PDF 渲染
-- `xlsx` skill — Excel 读写
-
----
-
-## 📐 工作流程
-
-### `/resume` — 从 JD 直接生成简历
-
-```
-/JD 文本或链接
-     │
-     ▼
-📖 获取 JD 内容（webReader）
-     │
-     ▼
-🔍 关键词分级（P1必须/P2重要/P3加分）
-     │
-     ▼
-🎯 匹配分析（技能档案 vs JD要求）
-     │
-     ▼
-📝 生成简历 Markdown
-     │
-     ▼
-💡 输出：简历 + 匹配度评估 + 面试建议
+```text
+$job-resume-codex
 ```
 
-### `/job-hunt` — 批量搜岗 + 批量出简历
+or use:
 
-```
-/job-hunt search                         /job-hunt apply
-     │                                         │
-     ▼                                         ▼
- 📋 选择搜索模板                            📖 读取勾选 + JD 缓存
-     │                                         │
-     ▼                                         ▼
- 🌐 browser-act 自动抓岗                    💬 生成自我介绍（E列 ✓）
-     │                                         │
-     ▼                                         ▼
- 🔄 去重                                     📄 定制简历 PDF（G列 ✓）
-     │                                         │
-     ▼                                         ▼
- 📊 写入 Excel + 缓存 JD                    💾 保存 Excel + 清理缓存
-     │
-     ▼
- ✋ 暂停 — 等你打勾
+```text
+/skills
 ```
 
-**两步搞定：**
+and select `job-resume-codex`.
 
-```bash
-# 📌 Step 1：搜索岗位，写入 Excel
-/job-hunt search
+### Option B: global user skill
 
-# 👆 在 Excel 中勾选感兴趣的岗位和需要新简历的岗位
+Copy the skill directory to your user skills folder:
 
-# 📌 Step 2：批量生成自我介绍 + 定制简历
-/job-hunt apply
+```text
+~/.agents/skills/job-resume-codex/
 ```
 
----
+On Windows, the equivalent is usually:
 
-## 📁 文件结构
-
-```
-job-resume-skill/
-├── README.md                          # 🫵 你正在看的这个文件
-├── LICENSE                            # 📜 MIT License
-├── .gitignore
-├── skills/
-│   ├── resume.md                      # 📝 /resume 技能
-│   └── job-hunt.md                    # 📝 /job-hunt 技能
-├── templates/
-│   ├── resume_template.html           # 📄 HTML 简历模板
-│   └── job_templates.json             # 🔧 搜索条件模板
-└── examples/
-    └── profile_template.md            # 👤 用户技能档案模板
+```text
+C:\Users\<YOUR_USER>\.agents\skills\job-resume-codex\
 ```
 
----
+## Usage examples
 
-## 📊 Excel 结构（job-hunt 生成）
+### 1. Analyze one JD
 
-| 列 | 表头 | 阶段 | 说明 |
-|:--:|------|------|------|
-| A | 公司 | search | 公司名称 |
-| B | 岗位 | search | 岗位名称 |
-| C | Base | search | 工作城市 |
-| D | 链接 | search | Boss直聘岗位链接（超链接） |
-| E | 感兴趣? | 👤 用户勾选 | 打勾 → 生成自我介绍 |
-| F | 自我介绍 | apply | 100-150 字匹配话术 |
-| G | 需新简历? | 👤 用户勾选 | 打勾 → 生成定制简历 |
-| H | 业务模块 | apply | 职业技能关键词（可手动修改） |
-| I | 修改后的工作经历 | apply | 3 段经历针对 JD 的修改版 |
-| J | 简历路径 | apply | 生成的 PDF 路径 |
+```text
+$job-resume-codex
 
----
+下面是 JD。请输出：岗位路由结论、JD关键词分级、匹配矩阵、简历项目排序、可替换 bullets、自我介绍、面试拷打清单、风险表述清单。
 
-## 🎨 简历生成原理
-
-```
-resume_template.html（模板）
-         │
-         ▼  替换 <!-- WORK_EXPERIENCE --> 占位符
-    定制 HTML（临时文件）
-         │
-         ▼  Chrome headless --print-to-pdf
-    单页 A4 PDF（中文宋体/黑体排版）
+JD:
+...
 ```
 
-- 模板排版：22pt 姓名居中 + 深蓝板块标题 + 宋体正文
-- 工作经历：只改表述和顺序，保留所有量化数据
-- ATS 友好：使用 JD 原文关键词
+### 2. Screen a job table
 
----
+```text
+$job-resume-codex
 
-## ⚠️ 注意事项
+读取我给的岗位表。对每个岗位输出：方向路由、匹配等级、推荐简历版本、关键匹配点、风险点、自我介绍、面试准备重点。
+```
 
-- 🔐 **首次搜索需要登录** — 第一次运行 `search` 前，在浏览器中登录 Boss直聘
-- ✅ **真实性优先** — 所有简历内容基于真实经历，不编造
-- 📏 **单页控制** — 简历内容控制在一页 A4 以内
-- 🌐 **中文支持** — HTML 模板使用 PingFang SC / Songti SC 系统字体
+### 3. Generate interview drills
 
----
+```text
+$job-resume-codex
 
-## 🛠 技术栈
+这个岗位要投递。请按 CV/三维视觉路线，为 VGGT + SMPL-X、VGGT + ZJU-MoCap、VideoPose3D 准备面试拷打问题和安全回答边界。
+```
 
-- **Claude Code Skill** — 工作流编排
-- **browser-act** — Boss直聘页面自动化
-- **xlsx skill** — Excel 读写
-- **Chrome headless** — HTML → PDF 渲染
-- **HTML/CSS** — 简历模板排版
+## Route system
 
----
+### CV / 3D vision / graphics route
 
-## 📄 License
+Use for JDs mentioning computer vision, 3D vision, point cloud, depth estimation, camera geometry, human reconstruction, SMPL/SMPL-X, rendering, OpenCV, OpenGL, or graphics.
 
-MIT
+Project priority:
+
+1. VGGT + SMPL-X / 4K4D human-prior full-scene point cloud work
+2. VGGT + ZJU-MoCap data adapter
+3. VideoPose3D
+4. C++ graphics/game engineering
+5. TuringResearch as research-engineering support
+
+### AI Agent / RAG / LLMOps / tooling route
+
+Use for JDs mentioning AI Agent, tool use, RAG, knowledge base, evaluation, LLMOps, MCP, workflow automation, AI coding, or research engineering.
+
+Project priority:
+
+1. TuringResearch / automated research workflow
+2. evidence management, manifests, failure gates, source tracking
+3. Codex / Claude Code / OpenCode workflow experience
+4. VGGT as a complex research-engineering case
+5. Python automation
+
+### General engineering route
+
+Use for broad C++ / Python engineering roles.
+
+Project priority:
+
+1. C / C++ / Python foundation
+2. C++ graphics/game project
+3. Python automation and data processing
+4. Git / Linux / collaboration
+5. Research projects as engineering complexity evidence
+
+## Claim safety
+
+This repository is intentionally conservative. It should improve wording, not invent facts.
+
+Never fabricate:
+
+- internships
+- publications
+- awards
+- open-source stars or users
+- production metrics
+- completed model results
+- ownership of work done by others
+
+For VGGT-related projects, always distinguish:
+
+- teacher vs student
+- metric pass vs visual pass vs advisor pass
+- diagnostic evidence vs final evidence
+
+Do not present isolated human scatter, projection overlay, SMPL-only results, Kinect/teacher-only results, or prototype baselines as final advisor-level full-scene point cloud evidence.
+
+## Optional HTML resume rendering
+
+The skill includes a small helper:
+
+```text
+.agents/skills/job-resume-codex/scripts/render_resume.py
+```
+
+It renders a filled HTML file from `resume_template.html` and a JSON payload. PDF export requires local Chrome/Edge and should only be claimed if actually run in the local environment.
+
+## Migration notes from Claude Code
+
+| Claude Code version | Codex version |
+|---|---|
+| legacy Claude Code commands directory | `.agents/skills/job-resume-codex/SKILL.md` |
+| `/resume` | `$job-resume-codex` with JD task |
+| `/job-hunt search` | job-table workflow by default; browser automation optional |
+| `/job-hunt apply` | job-table tailoring workflow |
+| `~/.claude/.../user_profile.md` | `.agents/skills/job-resume-codex/assets/user_profile.md` |
+
+## Status
+
+Codex-ready skill structure is included. Browser job-board automation is not enabled by default because it depends on local login, browser tooling, and platform page behavior.

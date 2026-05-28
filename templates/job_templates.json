@@ -1,28 +1,3 @@
 {
-  "templates": [
-    {
-      "name": "杭州-内容运营",
-      "keywords": "内容运营",
-      "city": "杭州",
-      "salary": "20-50K",
-      "scale": "10000人以上",
-      "industry": "互联网"
-    },
-    {
-      "name": "上海-产品运营",
-      "keywords": "产品运营",
-      "city": "上海",
-      "salary": "20-50K",
-      "scale": "10000人以上",
-      "industry": "互联网"
-    },
-    {
-      "name": "北京-市场营销",
-      "keywords": "市场营销",
-      "city": "北京",
-      "salary": "20-50K",
-      "scale": "10000人以上",
-      "industry": "互联网"
-    }
-  ]
+  "note": "Codex version lives at .agents/skills/job-resume-codex/assets/job_templates.json"
 }
