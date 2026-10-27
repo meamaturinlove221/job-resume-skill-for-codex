@@ -158,3 +158,7 @@ It renders a filled HTML file from `resume_template.html` and a JSON payload. PD
 ## Status
 
 Codex-ready skill structure is included. Browser job-board automation is not enabled by default because it depends on local login, browser tooling, and platform page behavior.
+
+## Additional reusable Agent Skills
+
+The standalone, opt-in [GPT-6 Agent Engineering Skills](agent-engineering-skills/README.md) pack provides four narrowly triggered workflows for tool failures, context continuity, recoverable execution, and evidence-based regression analysis. It follows the September 2026 GPT-6 Astra skill-design guidance and points to the canonical HERO rules without copying them. This is a separate MIT-licensed package and does not change the resume skill.
